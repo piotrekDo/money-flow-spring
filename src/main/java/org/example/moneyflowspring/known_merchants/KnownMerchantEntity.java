@@ -1,0 +1,43 @@
+package org.example.moneyflowspring.known_merchants;
+
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Objects;
+
+@Entity(name = "known_merchants")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+public class KnownMerchantEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long merchantId;
+    @Column(unique = true)
+    private String merchantCode;
+    private String merchantName;
+    private String imageUrl;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
+    List<KnownMerchantKeyWord> keywords;
+
+    public void addKeyword(KnownMerchantKeyWord keyword) {
+        this.keywords.add(keyword);
+        keyword.setMerchant(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        KnownMerchantEntity that = (KnownMerchantEntity) o;
+        return Objects.equals(merchantId, that.merchantId) && Objects.equals(merchantCode, that.merchantCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(merchantId, merchantCode);
+    }
+}
