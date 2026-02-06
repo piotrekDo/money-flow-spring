@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.moneyflowspring.financial_transaction.FinancialTransactionEntity;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +22,12 @@ public class KnownMerchantEntity {
     private String merchantCode;
     private String merchantName;
     private String imageUrl;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant")
-    List<KnownMerchantKeyWord> keywords;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "merchant", fetch = FetchType.EAGER)
+    private List<KnownMerchantKeyWordEntity> keywords;
+    @OneToMany(mappedBy = "knownMerchantEntity", fetch = FetchType.LAZY)
+    private List<FinancialTransactionEntity> financialTransactionsEntities;
 
-    public void addKeyword(KnownMerchantKeyWord keyword) {
+    public void addKeyword(KnownMerchantKeyWordEntity keyword) {
         this.keywords.add(keyword);
         keyword.setMerchant(this);
     }
@@ -39,5 +42,16 @@ public class KnownMerchantEntity {
     @Override
     public int hashCode() {
         return Objects.hash(merchantId, merchantCode);
+    }
+
+    @Override
+    public String toString() {
+        return "KnownMerchantEntity{" +
+                "merchantId=" + merchantId +
+                ", merchantCode='" + merchantCode + '\'' +
+                ", merchantName='" + merchantName + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", keywords=" + keywords +
+                '}';
     }
 }

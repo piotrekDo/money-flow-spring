@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 public class FinancialTransactionFileRecord {
-    private Long systemId;
     private TranType tranType;
     private String tranDate;
     private String tranNr;
@@ -20,7 +19,6 @@ public class FinancialTransactionFileRecord {
     @Override
     public String toString() {
         return "FinancialTransactionFileRecord{" +
-                "systemId=" + systemId +
                 ", tranType=" + tranType +
                 ", tranDate=" + tranDate +
                 ", tranNr='" + tranNr + '\'' +

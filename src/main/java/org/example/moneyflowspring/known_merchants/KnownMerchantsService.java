@@ -19,11 +19,6 @@ public class KnownMerchantsService {
 
     private final static String KNOWN_MERCHANTS_INPUT_DIR = "C:\\Users\\piotr\\Desktop\\EXPENSE_TRACKER\\known_merchants";
 
-    @PostConstruct
-    void init() {
-        retrieveKnownMerchantsFiles();
-    }
-
 
     ArrayList<String> listBaseFileNames() {
         File inputDirectory = new File(KNOWN_MERCHANTS_INPUT_DIR);
@@ -56,7 +51,7 @@ public class KnownMerchantsService {
         return recordLines;
     }
 
-    void retrieveKnownMerchantsFiles() {
+   public  void retrieveKnownMerchantsFiles() {
         ArrayList<String> files = listBaseFileNames();
         System.out.println("Processing " + files.size() + " files.");
         for (String file : files) {
@@ -67,18 +62,18 @@ public class KnownMerchantsService {
                             record.getMerchantCode(),
                             record.getMerchantName(),
                             null,
+                            new ArrayList<>(),
                             new ArrayList<>()
                     )).distinct().collect(Collectors.toMap(KnownMerchantEntity::getMerchantCode, Function.identity()));
 
             knownMerchantFileRecords.forEach(record -> {
-                KnownMerchantKeyWord keyword = new KnownMerchantKeyWord(null, null, record.getKeyword(), record.getWeight());
+                KnownMerchantKeyWordEntity keyword = new KnownMerchantKeyWordEntity(null, null, record.getKeyword(), record.getWeight());
                 KnownMerchantEntity knownMerchantEntity = collectedMerchants.get(record.getMerchantCode());
                 if (knownMerchantEntity != null) {
                     knownMerchantEntity.addKeyword(keyword);
                 }
             });
             knownMerchantsRepository.saveAll(collectedMerchants.values());
-
         }
 
     }

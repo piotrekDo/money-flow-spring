@@ -8,10 +8,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class IngFileReader {
@@ -54,7 +52,7 @@ public class IngFileReader {
         return resultFiles;
     }
 
-    public List<FinancialTransactionFileRecord> retrieveNewTransactions() {
+    public List<FinancialTransactionFileRecord> retrieveNewTransactionsFromFiles() {
         int recordsTotal = 0;
         List<FinancialTransactionFileRecord> transactionRecords = new ArrayList<>();
         ArrayList<String> files = listBaseFileNames();
@@ -121,7 +119,6 @@ public class IngFileReader {
             tranType = TranType.CASH_IN;
         }
 
-
         final String account = line[4];
 
         if (isInnerTransaction(account, title, vendor_data)) {
@@ -132,7 +129,6 @@ public class IngFileReader {
         final String tran_nr = line[7];
         final String amount_string = line[8];
         final String blockAmount = line[10];
-        final String normalizedKeywords = normalize(vendor_data + " " + title);
 
         Double amountValue = null;
         try {
@@ -155,7 +151,6 @@ public class IngFileReader {
         }
 
         return new FinancialTransactionFileRecord(
-                null,
                 tranType,
                 transaction_date,
                 tran_nr,
@@ -164,15 +159,5 @@ public class IngFileReader {
                 title,
                 amountValue
         );
-    }
-
-    String normalize(String s) {
-        if (s == null) return "";
-        s = s.toUpperCase(Locale.ROOT);
-        s = s.replace("Ł", "L");
-        s = Normalizer.normalize(s, Normalizer.Form.NFD);
-        s = s.replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-        s = s.replaceAll("[^A-Z0-9 ]+", " ");
-        return s.replaceAll("\\s+", " ").trim();
     }
 }
