@@ -1,8 +1,8 @@
 package org.example.moneyflowspring.known_merchants;
 
 
-import jakarta.annotation.PostConstruct;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -51,8 +51,10 @@ public class KnownMerchantsService {
         return recordLines;
     }
 
-   public  void retrieveKnownMerchantsFiles() {
+    public NewMerchantsFromFile retrieveKnownMerchantsFiles() {
         ArrayList<String> files = listBaseFileNames();
+        List<KnownMerchantEntity> savedMerchants = new LinkedList<>();
+        List<KnownMerchantEntity> duplicatedMerchants = new LinkedList<>();
         System.out.println("Processing " + files.size() + " files.");
         for (String file : files) {
             List<KnownMerchantFileRecord> knownMerchantFileRecords = readFile(file);
@@ -62,6 +64,7 @@ public class KnownMerchantsService {
                             record.getMerchantCode(),
                             record.getMerchantName(),
                             null,
+                            new ArrayList<>(),
                             new ArrayList<>(),
                             new ArrayList<>()
                     )).distinct().collect(Collectors.toMap(KnownMerchantEntity::getMerchantCode, Function.identity()));
@@ -73,8 +76,14 @@ public class KnownMerchantsService {
                     knownMerchantEntity.addKeyword(keyword);
                 }
             });
-            knownMerchantsRepository.saveAll(collectedMerchants.values());
+            for (KnownMerchantEntity knownMerchantEntity : collectedMerchants.values()) {
+                try {
+                    savedMerchants.add(knownMerchantsRepository.save(knownMerchantEntity));
+                } catch (DataIntegrityViolationException e) {
+                    duplicatedMerchants.add(knownMerchantEntity);
+                }
+            }
         }
-
+        return new NewMerchantsFromFile(savedMerchants, duplicatedMerchants);
     }
 }

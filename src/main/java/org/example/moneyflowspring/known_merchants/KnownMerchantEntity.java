@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.moneyflowspring.category.SubcategoryEntity;
 import org.example.moneyflowspring.financial_transaction.FinancialTransactionEntity;
 
 import java.util.List;
@@ -26,6 +27,13 @@ public class KnownMerchantEntity {
     private List<KnownMerchantKeyWordEntity> keywords;
     @OneToMany(mappedBy = "knownMerchantEntity", fetch = FetchType.LAZY)
     private List<FinancialTransactionEntity> financialTransactionsEntities;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "merchant_subcategories",
+            joinColumns = @JoinColumn(name = "merchant_id"),
+            inverseJoinColumns = @JoinColumn(name = "subcategory_id")
+    )
+    private List<SubcategoryEntity> subcategories;
 
     public void addKeyword(KnownMerchantKeyWordEntity keyword) {
         this.keywords.add(keyword);

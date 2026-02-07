@@ -1,6 +1,5 @@
 package org.example.moneyflowspring.financial_transaction;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.moneyflowspring.known_merchants.*;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,20 +34,9 @@ public class FinancialTransactionService {
                 savedTransactions.add(financialTransactionRepository.save(transactionToSave));
             } catch (DataIntegrityViolationException e) {
                 duplicatedTransactions.add(transactionToSave);
-                System.out.println(e.getMessage());
-                System.out.println("Duplikat bankTranNr lub naruszenie ograniczenia unikalności");
             }
         }
 
         return new NewTransactionsFromIngFile(savedTransactions, duplicatedTransactions);
     }
-
-
-    @Transactional
-    void printTransactionsByMerchantId(long merchantId) {
-        KnownMerchantEntity knownMerchantEntity = knownMerchantsRepository.findById(merchantId).orElseThrow();
-        List<FinancialTransactionEntity> financialTransactionsEntities = knownMerchantEntity.getFinancialTransactionsEntities();
-        financialTransactionsEntities.forEach(System.out::println);
-    }
-
 }
