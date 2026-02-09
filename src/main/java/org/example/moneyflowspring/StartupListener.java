@@ -1,6 +1,7 @@
 package org.example.moneyflowspring;
 
 import lombok.AllArgsConstructor;
+import org.example.moneyflowspring.category.CategoryService;
 import org.example.moneyflowspring.financial_transaction.FinancialTransactionService;
 import org.example.moneyflowspring.financial_transaction.NewTransactionsFromIngFile;
 import org.example.moneyflowspring.known_merchants.KnownMerchantsService;
@@ -15,6 +16,7 @@ public class StartupListener {
 
     private final KnownMerchantsService knownMerchantsService;
     private final FinancialTransactionService financialTransactionService;
+    private final CategoryService categoryService;
 
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationReady() {
@@ -27,15 +29,6 @@ public class StartupListener {
         System.out.println("Wporowadzono " +  newTransactionsFromIngFile.getSavedTransactions().size() + " nowych transakcji");
         System.out.println("Wykryto " +  newTransactionsFromIngFile.getDuplicatedTransactions().size() + " zduplikowamych transakcji");
 
-//        System.out.println("--- SAVED TRANSACTIONS ---");
-//        newTransactionsFromIngFile.getSavedTransactions().forEach(System.out::println);
-//
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//        System.out.println("--- DUPLICATED TRANSACTIONS ---");
-//        newTransactionsFromIngFile.getDuplicatedTransactions().forEach(System.out::println);
 
     }
 }
