@@ -5,16 +5,30 @@ import org.example.moneyflowspring.known_merchants.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class FinancialTransactionService {
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     private final IngFileReader ingFileReader;
     private final FinancialTransactionRepository financialTransactionRepository;
     private final KnownMerchantsRepository knownMerchantsRepository;
     private final FinancialTransactionMapper financialTransactionMapper;
     private final KnownMerchantMatcher knownMerchantMatcher;
+
+    List<FinancialTransactionDto> findTransactionsWitchDateBetween(String from, String to) {
+        LocalDate fromDate = LocalDate.parse(from, formatter);
+        LocalDate toDate = LocalDate.parse(to, formatter);
+        return financialTransactionRepository
+                .findByTranDateBetweenOrderByTranDateAsc(fromDate, toDate)
+                .stream()
+                .map(financialTransactionMapper::fromEntity)
+                .toList();
+    }
 
 
     public NewTransactionsFromIngFile retrieveNewTransactionsFormIngFiles() {

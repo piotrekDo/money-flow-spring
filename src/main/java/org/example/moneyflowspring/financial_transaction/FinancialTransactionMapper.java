@@ -1,5 +1,8 @@
 package org.example.moneyflowspring.financial_transaction;
 
+import org.example.moneyflowspring.category.SubcategoryDto;
+import org.example.moneyflowspring.known_merchants.KnownMerchantDto;
+import org.example.moneyflowspring.known_merchants.PossibleMerchantDto;
 import org.springframework.stereotype.Service;
 
 import java.text.Normalizer;
@@ -32,7 +35,28 @@ public class FinancialTransactionMapper {
                 normalizedKeywords,
                 new ArrayList<>(),
                 null,
-                true);
+                true,
+                null
+        );
+    }
+
+    FinancialTransactionDto fromEntity(FinancialTransactionEntity entity) {
+
+        return new FinancialTransactionDto(
+                entity.getSystemId(),
+                entity.getTranType(),
+                entity.getTranDate(),
+                entity.getAmount(),
+                entity.getBankTranNr(),
+                entity.getAccountNr(),
+                entity.getMerchantDataRaw(),
+                entity.getTitleRaw(),
+                entity.getNormalizedKeywords(),
+                entity.getPossibleMerchants().stream().map(PossibleMerchantDto::fromEntity).toList(),
+                KnownMerchantDto.fromEntity(entity.getKnownMerchantEntity()),
+                entity.isKnownMerchantUnsure(),
+                SubcategoryDto.fromEntity(entity.getSubcategoryEntity())
+        );
     }
 
     String normalize(String s) {

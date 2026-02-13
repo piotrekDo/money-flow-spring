@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.moneyflowspring.category.SubcategoryEntity;
 import org.example.moneyflowspring.known_merchants.KnownMerchantEntity;
 import org.example.moneyflowspring.known_merchants.PossibleMerchantEntity;
 
@@ -36,4 +37,6 @@ public class FinancialTransactionEntity {
     @ManyToOne
     private KnownMerchantEntity knownMerchantEntity;
     private boolean knownMerchantUnsure;
+    @ManyToOne
+    private SubcategoryEntity subcategoryEntity;
 }

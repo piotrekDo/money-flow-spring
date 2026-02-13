@@ -11,4 +11,17 @@ public class SubcategoryDto {
     private String imageUrl;
     private int iconId;
     private String color;
+
+    public static SubcategoryDto fromEntity(SubcategoryEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new SubcategoryDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getImageUrl(),
+                entity.getIconId(),
+                entity.getColor()
+        );
+    }
 }

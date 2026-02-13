@@ -17,6 +17,7 @@ public class CategoryMapper {
                 dto.getIconId(),
                 dto.getColor(),
                 null,
+                new ArrayList<>(),
                 new ArrayList<>()
         );
     }

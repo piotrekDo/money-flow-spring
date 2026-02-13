@@ -9,4 +9,8 @@ public class KnownMerchantKeywordDto {
     private Long id;
     private String keyword;
     private int weight;
+
+    public static KnownMerchantKeywordDto fromEntity(KnownMerchantKeyWordEntity entity) {
+        return new KnownMerchantKeywordDto(entity.getId(), entity.getKeyword(), entity.getWeight());
+    }
 }

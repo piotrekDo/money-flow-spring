@@ -13,4 +13,18 @@ public class KnownMerchantDto {
     private String merchantName;
     private String imageUrl;
     private List<KnownMerchantKeywordDto> keywords;
+
+    public static KnownMerchantDto fromEntity(KnownMerchantEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        List<KnownMerchantKeywordDto> keywordsDto = entity.getKeywords().stream().map(KnownMerchantKeywordDto::fromEntity).toList();
+        return new KnownMerchantDto(
+                entity.getMerchantId(),
+                entity.getMerchantCode(),
+                entity.getMerchantName(),
+                entity.getImageUrl(),
+                keywordsDto
+        );
+    }
 }

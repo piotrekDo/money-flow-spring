@@ -2,6 +2,7 @@ package org.example.moneyflowspring.financial_transaction;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.example.moneyflowspring.category.SubcategoryDto;
 import org.example.moneyflowspring.known_merchants.KnownMerchantDto;
 import org.example.moneyflowspring.known_merchants.PossibleMerchantDto;
 
@@ -23,4 +24,5 @@ public class FinancialTransactionDto {
     private List<PossibleMerchantDto> possibleMerchants;
     private KnownMerchantDto knownMerchant;
     private boolean knownMerchantUnsure;
+    private SubcategoryDto subcategoryDto;
 }

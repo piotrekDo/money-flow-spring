@@ -12,4 +12,16 @@ public class PossibleMerchantDto {
     private KnownMerchantDto knownMerchantDto;
     private int points;
     private List<String> matchedKeywords;
+
+    static public PossibleMerchantDto fromEntity(PossibleMerchantEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        return new PossibleMerchantDto(
+                entity.getId(),
+                KnownMerchantDto.fromEntity(entity.getKnownMerchant()),
+                entity.getPoints(),
+                entity.getMatchedKeywords()
+        );
+    }
 }
