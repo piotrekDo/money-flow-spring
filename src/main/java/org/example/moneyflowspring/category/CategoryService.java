@@ -3,6 +3,8 @@ package org.example.moneyflowspring.category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -11,9 +13,23 @@ public class CategoryService {
     private final SubcategoryRepository subcategoryRepository;
     private final CategoryMapper categoryMapper;
 
+    List<SubcategoryDto> findAllSubcategoriesNoMerchants() {
+        return subcategoryRepository
+                .findAll()
+                .stream()
+                .map(SubcategoryDto::fromEntity)
+                .toList();
+    }
+
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        CategoryEntity categoryToSave = categoryMapper.categoryEntityFromDto(categoryDto);
+        CategoryEntity categoryEntitySaved = categoryRepository.save(categoryToSave);
+        return categoryMapper.categoryDtoFromEntity(categoryEntitySaved);
+    }
+
     public SubcategoryDto createSubcategory(SubcategoryDto dto) {
         SubcategoryEntity entityToSave = categoryMapper.subcategoryEntityFromDto(dto);
         SubcategoryEntity entitySaved = subcategoryRepository.save(entityToSave);
-        return categoryMapper.subcategoryDtoFromEntity(entitySaved);
+        return SubcategoryDto.fromEntity(entitySaved);
     }
 }

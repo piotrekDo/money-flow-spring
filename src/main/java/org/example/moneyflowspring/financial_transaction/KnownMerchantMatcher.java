@@ -33,8 +33,14 @@ public class KnownMerchantMatcher {
             possibleMerchant.getMatchedKeywords().add(keyword);
             possibleMerchant.setPoints(possibleMerchant.getPoints() + weight);
 
-            List<PossibleMerchantEntity> sortedPossibleMerchants = possibleMerchants.values().stream().filter(m -> m.getPoints() > 1).sorted().limit(3).toList();
-            transaction.setPossibleMerchants(sortedPossibleMerchants);
+            List<PossibleMerchantEntity> sortedPossibleMerchants = possibleMerchants.values()
+                    .stream()
+                    .filter(m -> m.getPoints() > 1).
+                    sorted()
+                    .limit(3)
+                    .toList();
+            transaction.getPossibleMerchants().clear();
+            transaction.getPossibleMerchants().addAll(sortedPossibleMerchants);
             sortedPossibleMerchants.forEach(possMer -> {
                 possMer.setTransaction(transaction);
             });

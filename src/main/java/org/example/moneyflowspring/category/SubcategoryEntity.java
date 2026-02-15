@@ -19,7 +19,7 @@ public class SubcategoryEntity {
     private Long id;
     private String name;
     private String imageUrl;
-    private int iconId;
+    private String icon;
     private String color;
     @ManyToOne(fetch = FetchType.EAGER)
     private CategoryEntity category;

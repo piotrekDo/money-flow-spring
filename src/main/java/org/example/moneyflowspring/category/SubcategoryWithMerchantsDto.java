@@ -12,8 +12,12 @@ public class SubcategoryWithMerchantsDto {
     private Long id;
     private String name;
     private String imageUrl;
-    private int iconId;
+    private String icon;
     private String color;
-    private CategoryDto category;
+    private Long categoryId;
+    private String categoryName;
+    private String categoryImageUrl;
+    private String categoryIcon;
+    private String categoryColor;
     private List<KnownMerchantsWithTransactionsDto> merchants;
 }

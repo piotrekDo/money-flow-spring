@@ -17,7 +17,7 @@ public class CategoryEntity {
     private Long id;
     private String name;
     private String imageUrl;
-    private int iconId;
+    private String icon;
     private String color;
     @OneToMany
     private List<SubcategoryEntity> categoryEntities;

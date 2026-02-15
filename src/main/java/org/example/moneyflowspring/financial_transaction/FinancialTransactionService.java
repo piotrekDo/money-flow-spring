@@ -20,6 +20,12 @@ public class FinancialTransactionService {
     private final FinancialTransactionMapper financialTransactionMapper;
     private final KnownMerchantMatcher knownMerchantMatcher;
 
+    FinancialTransactionDto recalculateTransactionPossibleMerchantsBySystemId(Long systemId) {
+        FinancialTransactionEntity transactionEntity = financialTransactionRepository.findById(systemId).orElseThrow();
+        FinancialTransactionEntity entityUpdated = financialTransactionRepository.save(knownMerchantMatcher.matchMerchantForTransaction(transactionEntity));
+        return financialTransactionMapper.fromEntity(entityUpdated);
+    }
+
     List<FinancialTransactionDto> findTransactionsWitchDateBetween(String from, String to) {
         LocalDate fromDate = LocalDate.parse(from, formatter);
         LocalDate toDate = LocalDate.parse(to, formatter);

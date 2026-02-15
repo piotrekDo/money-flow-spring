@@ -104,7 +104,7 @@ public class IngFileReader {
 
     FinancialTransactionFileRecord createNewRecordFromParserLine(String readLine) {
         String[] line = readLine.split(";");
-        final String transaction_date = line[1];
+        final String transaction_date = line[0];
         final String vendor_data = line[2];
         final String title = line[3];
 
