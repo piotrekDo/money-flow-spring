@@ -21,6 +21,13 @@ public class CategoryService {
                 .toList();
     }
 
+    List<CategoryDto> findAllCategories() {
+        return categoryRepository.findAll()
+                .stream()
+                .map(categoryMapper::categoryDtoFromEntity)
+                .toList();
+    }
+
     public CategoryDto createCategory(CategoryDto categoryDto) {
         CategoryEntity categoryToSave = categoryMapper.categoryEntityFromDto(categoryDto);
         CategoryEntity categoryEntitySaved = categoryRepository.save(categoryToSave);
@@ -32,4 +39,6 @@ public class CategoryService {
         SubcategoryEntity entitySaved = subcategoryRepository.save(entityToSave);
         return SubcategoryDto.fromEntity(entitySaved);
     }
+
+
 }

@@ -18,4 +18,9 @@ public class CategoryController {
     List<SubcategoryDto> findAllSubcategoriesNoMerchants() {
         return categoryService.findAllSubcategoriesNoMerchants();
     }
+
+    @GetMapping("/categories-all")
+    List<CategoryDto> findAllCategories() {
+        return categoryService.findAllCategories();
+    }
 }
