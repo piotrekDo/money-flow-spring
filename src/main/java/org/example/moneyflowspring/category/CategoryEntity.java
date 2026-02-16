@@ -19,6 +19,6 @@ public class CategoryEntity {
     private String imageUrl;
     private String icon;
     private String color;
-    @OneToMany
+    @OneToMany(mappedBy = "category" , cascade = CascadeType.ALL)
     private List<SubcategoryEntity> categoryEntities;
 }

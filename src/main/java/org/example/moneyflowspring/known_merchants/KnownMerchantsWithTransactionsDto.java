@@ -13,6 +13,6 @@ public class KnownMerchantsWithTransactionsDto {
     private String merchantCode;
     private String merchantName;
     private String imageUrl;
-   private List<KnownMerchantKeywordDto> keywords;
+    private List<KnownMerchantKeywordDto> keywords;
     private List<FinancialTransactionDto> transactions;
 }

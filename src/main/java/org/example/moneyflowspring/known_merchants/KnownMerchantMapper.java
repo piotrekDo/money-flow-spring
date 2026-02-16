@@ -1,6 +1,7 @@
 package org.example.moneyflowspring.known_merchants;
 
 import lombok.RequiredArgsConstructor;
+import org.example.moneyflowspring.category.SubcategoryDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -20,12 +21,14 @@ public class KnownMerchantMapper {
 
     KnownMerchantDto merchantFromEntity(KnownMerchantEntity entity) {
         List<KnownMerchantKeywordDto> keywordsDto = entity.getKeywords().stream().map(this::keywordFromEntity).toList();
+        List<SubcategoryDto> subcategories = entity.getSubcategories().stream().map(SubcategoryDto::fromEntity).toList();
         return new KnownMerchantDto(
                 entity.getMerchantId(),
                 entity.getMerchantCode(),
                 entity.getMerchantName(),
                 entity.getImageUrl(),
-                keywordsDto
+                keywordsDto,
+                subcategories
         );
     }
 

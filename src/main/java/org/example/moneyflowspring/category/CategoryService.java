@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,15 @@ public class CategoryService {
                 .stream()
                 .map(categoryMapper::categoryDtoFromEntity)
                 .toList();
+    }
+
+    SubcategoryDto changeSubcategoryCategory(long subCategoryId, long categoryId) {
+        SubcategoryEntity subcategoryEntity = subcategoryRepository.findById(subCategoryId).orElseThrow(() -> new NoSuchElementException("Subcategory with id: " + subCategoryId + " does not exist"));
+        CategoryEntity categoryEntity = categoryRepository.findById(categoryId).orElseThrow(() -> new NoSuchElementException("Category with id: " + categoryId + " does not exist"));
+        subcategoryEntity.setCategory(categoryEntity);
+        categoryEntity.getCategoryEntities().add(subcategoryEntity);
+        SubcategoryEntity subcategoryUpdated = subcategoryRepository.save(subcategoryEntity);
+        return SubcategoryDto.fromEntity(subcategoryUpdated);
     }
 
     public CategoryDto createCategory(CategoryDto categoryDto) {

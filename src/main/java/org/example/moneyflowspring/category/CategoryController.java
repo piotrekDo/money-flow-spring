@@ -1,9 +1,7 @@
 package org.example.moneyflowspring.category;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +20,13 @@ public class CategoryController {
     @GetMapping("/categories-all")
     List<CategoryDto> findAllCategories() {
         return categoryService.findAllCategories();
+    }
+
+    @PostMapping("/change-subcategory-cat")
+    SubcategoryDto changeSubcategoryCategory(
+            @RequestParam Long subCategoryId,
+            @RequestParam Long categoryId
+    ) {
+        return categoryService.changeSubcategoryCategory(subCategoryId, categoryId);
     }
 }

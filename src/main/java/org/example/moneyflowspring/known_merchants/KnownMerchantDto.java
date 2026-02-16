@@ -2,9 +2,13 @@ package org.example.moneyflowspring.known_merchants;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.example.moneyflowspring.category.SubcategoryDto;
 
+import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 @AllArgsConstructor
 @Data
 public class KnownMerchantDto {
@@ -13,6 +17,7 @@ public class KnownMerchantDto {
     private String merchantName;
     private String imageUrl;
     private List<KnownMerchantKeywordDto> keywords;
+    private List<SubcategoryDto> subcategories;
 
     public static KnownMerchantDto fromEntity(KnownMerchantEntity entity) {
         if (entity == null) {
@@ -24,7 +29,8 @@ public class KnownMerchantDto {
                 entity.getMerchantCode(),
                 entity.getMerchantName(),
                 entity.getImageUrl(),
-                keywordsDto
+                keywordsDto,
+                new ArrayList<>()
         );
     }
 }
