@@ -1,5 +1,6 @@
 package org.example.moneyflowspring.financial_transaction;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +14,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
 
     List<FinancialTransactionEntity> findByTranDateBetween(LocalDate startDate, LocalDate endDate);
 
-    List<FinancialTransactionEntity> findByTranDateBetweenOrderByTranDateAsc(LocalDate startDate, LocalDate endDate);
+    List<FinancialTransactionEntity> findByTranDateBetweenOrderByTranDateAsc(LocalDate startDate, LocalDate endDate, Sort sort);
 
     List<FinancialTransactionEntity> findByPossibleMerchantsIsEmpty();
 
@@ -33,6 +34,7 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
                     FROM unnest(:keywords) k 
                     WHERE LOWER(t.normalized_keywords) LIKE LOWER(CONCAT('%', k, '%'))
                 )
+                ORDER BY systemId DESC
             """, nativeQuery = true)
     List<FinancialTransactionEntity>
     findByNormalizedKeywordsContainingAny(@Param("keywords") List<String> keywords);

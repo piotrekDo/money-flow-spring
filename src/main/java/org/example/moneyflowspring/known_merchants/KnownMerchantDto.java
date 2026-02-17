@@ -24,13 +24,14 @@ public class KnownMerchantDto {
             return null;
         }
         List<KnownMerchantKeywordDto> keywordsDto = entity.getKeywords().stream().map(KnownMerchantKeywordDto::fromEntity).toList();
+        List<SubcategoryDto> subcategories = entity.getSubcategories().stream().map(SubcategoryDto::fromEntity).toList();
         return new KnownMerchantDto(
                 entity.getMerchantId(),
                 entity.getMerchantCode(),
                 entity.getMerchantName(),
                 entity.getImageUrl(),
                 keywordsDto,
-                new ArrayList<>()
+                subcategories
         );
     }
 }

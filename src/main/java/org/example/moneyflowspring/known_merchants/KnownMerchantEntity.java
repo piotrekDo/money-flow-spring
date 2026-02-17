@@ -27,7 +27,7 @@ public class KnownMerchantEntity {
     private List<KnownMerchantKeyWordEntity> keywords;
     @OneToMany(mappedBy = "knownMerchantEntity", fetch = FetchType.LAZY)
     private List<FinancialTransactionEntity> financialTransactionsEntities;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "merchant_subcategories",
             joinColumns = @JoinColumn(name = "merchant_id"),

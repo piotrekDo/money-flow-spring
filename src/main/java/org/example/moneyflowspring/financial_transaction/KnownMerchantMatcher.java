@@ -1,6 +1,8 @@
 package org.example.moneyflowspring.financial_transaction;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.moneyflowspring.category.SubcategoryEntity;
 import org.example.moneyflowspring.known_merchants.*;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import java.util.*;
 public class KnownMerchantMatcher {
     private final KnownMerchantKeyWordRepository knownMerchantKeyWordRepository;
 
+    @Transactional
     FinancialTransactionEntity matchMerchantForTransaction(FinancialTransactionEntity transaction) {
         Set<String> transactionKeywords =
                 new HashSet<>(Arrays.asList(transaction.getNormalizedKeywords().split(" ")));
@@ -51,8 +54,14 @@ public class KnownMerchantMatcher {
             if (strongMatches.size() == 1) {
                 PossibleMerchantEntity winner = strongMatches.getFirst();
 
-                transaction.setKnownMerchantEntity(winner.getKnownMerchant());
+                KnownMerchantEntity winnerMerchant = winner.getKnownMerchant();
+                transaction.setKnownMerchantEntity(winnerMerchant);
                 transaction.setKnownMerchantUnsure(false);
+
+                if (winnerMerchant.getSubcategories().size() == 1) {
+                    SubcategoryEntity onlySubcategory = winnerMerchant.getSubcategories().get(0);
+                    transaction.setSubcategoryEntity(onlySubcategory);
+                }
             }
         }
         return transaction;

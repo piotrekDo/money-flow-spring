@@ -30,4 +30,10 @@ public class FinancialTransactionController {
             @RequestParam Long merchantId) {
         return service.setKnownMerchant(tranSystemId, merchantId);
     }
+
+    @PostMapping("/add-subcategory")
+    FinancialTransactionDto addSubcategory(@RequestParam Long tranSystemId,
+                                           @RequestParam Long subcategoryId) {
+        return service.addSubcategoryToTransaction(tranSystemId, subcategoryId);
+    }
 }

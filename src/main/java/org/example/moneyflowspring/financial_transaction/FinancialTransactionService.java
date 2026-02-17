@@ -1,8 +1,12 @@
 package org.example.moneyflowspring.financial_transaction;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.moneyflowspring.category.SubcategoryEntity;
+import org.example.moneyflowspring.category.SubcategoryRepository;
 import org.example.moneyflowspring.known_merchants.*;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,13 +23,19 @@ public class FinancialTransactionService {
     private final KnownMerchantsRepository knownMerchantsRepository;
     private final FinancialTransactionMapper financialTransactionMapper;
     private final KnownMerchantMatcher knownMerchantMatcher;
+    private final SubcategoryRepository subcategoryRepository;
 
+    @Transactional
     FinancialTransactionDto setKnownMerchant(long tranSystemId, long merchantId) {
         FinancialTransactionEntity transactionEntity = financialTransactionRepository.findById(tranSystemId).orElseThrow(() -> new NoSuchElementException("Transaction with id " + tranSystemId + " not found"));
         KnownMerchantEntity knownMerchantEntity = knownMerchantsRepository.findById(merchantId).orElseThrow(() -> new NoSuchElementException("Merchant not found with id: " + merchantId));
 
         transactionEntity.setKnownMerchantEntity(knownMerchantEntity);
         transactionEntity.setKnownMerchantUnsure(false);
+        if (knownMerchantEntity.getSubcategories().size() == 1) {
+            SubcategoryEntity onlySubcategory = knownMerchantEntity.getSubcategories().get(0);
+            transactionEntity.setSubcategoryEntity(onlySubcategory);
+        }
 
         FinancialTransactionEntity updatedTransactionEntity = financialTransactionRepository.save(transactionEntity);
         return financialTransactionMapper.fromEntity(updatedTransactionEntity);
@@ -42,7 +52,7 @@ public class FinancialTransactionService {
         LocalDate toDate = LocalDate.parse(to, formatter);
 
         List<FinancialTransactionDto> transactionsFound = financialTransactionRepository
-                .findByTranDateBetweenOrderByTranDateAsc(fromDate, toDate)
+                .findByTranDateBetweenOrderByTranDateAsc(fromDate, toDate, Sort.by(Sort.Direction.DESC, "systemId"))
                 .stream()
                 .map(financialTransactionMapper::fromEntity)
                 .toList();
@@ -110,5 +120,14 @@ public class FinancialTransactionService {
         }
 
         return new NewTransactionsFromIngFile(savedTransactions, duplicatedTransactions);
+    }
+
+    FinancialTransactionDto addSubcategoryToTransaction(Long tranSystemId, Long subcategoryId) {
+        FinancialTransactionEntity transactionEntity = financialTransactionRepository.findById(tranSystemId).orElseThrow(() -> new NoSuchElementException("Transaction with id " + tranSystemId + " does not exist"));
+        SubcategoryEntity subcategoryEntity = subcategoryRepository.findById(subcategoryId).orElseThrow(() -> new NoSuchElementException("Subcategory with id " + subcategoryId + " does not exist"));
+
+        transactionEntity.setSubcategoryEntity(subcategoryEntity);
+        FinancialTransactionEntity transactionEntityUpdated = financialTransactionRepository.save(transactionEntity);
+        return financialTransactionMapper.fromEntity(transactionEntityUpdated);
     }
 }
