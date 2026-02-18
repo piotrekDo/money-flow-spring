@@ -1,12 +1,12 @@
 package org.example.moneyflowspring.category;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import org.example.moneyflowspring.known_merchants.KnownMerchantsWithTransactionsDto;
+import org.example.moneyflowspring.known_merchants.KnownMerchantDto;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Data
 public class SubcategoryWithMerchantsDto {
     private Long id;
@@ -19,5 +19,5 @@ public class SubcategoryWithMerchantsDto {
     private String categoryImageUrl;
     private String categoryIcon;
     private String categoryColor;
-    private List<KnownMerchantsWithTransactionsDto> merchants;
+    private List<KnownMerchantDto> merchants;
 }

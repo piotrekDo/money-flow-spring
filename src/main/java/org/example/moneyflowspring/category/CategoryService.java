@@ -1,6 +1,8 @@
 package org.example.moneyflowspring.category;
 
 import lombok.RequiredArgsConstructor;
+import org.example.moneyflowspring.known_merchants.KnownMerchantDto;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,16 +16,35 @@ public class CategoryService {
     private final SubcategoryRepository subcategoryRepository;
     private final CategoryMapper categoryMapper;
 
+    SubcategoryWithMerchantsDto findSubcategoryWithMerchantsById(Long id){
+        SubcategoryEntity subcategoryEntity = subcategoryRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Subcategory with id " + id + " not found"));
+        CategoryEntity category = subcategoryEntity.getCategory();
+        List<KnownMerchantDto> merchants = subcategoryEntity.getMerchants().stream().map(KnownMerchantDto::fromEntity).toList();
+        return new SubcategoryWithMerchantsDto(
+                subcategoryEntity.getId(),
+                subcategoryEntity.getName(),
+                subcategoryEntity.getImageUrl(),
+                subcategoryEntity.getIcon(),
+                subcategoryEntity.getColor(),
+                category != null ? category.getId() : null,
+                category != null ? category.getName() : null,
+                category != null ? category.getImageUrl() : null,
+                category != null ? category.getIcon() : null,
+                category != null? category.getColor() : null,
+                merchants
+        );
+    }
+
     List<SubcategoryDto> findAllSubcategoriesNoMerchants() {
         return subcategoryRepository
-                .findAll()
+                .findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(SubcategoryDto::fromEntity)
                 .toList();
     }
 
     List<CategoryDto> findAllCategories() {
-        return categoryRepository.findAll()
+        return categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(categoryMapper::categoryDtoFromEntity)
                 .toList();

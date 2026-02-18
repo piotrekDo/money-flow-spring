@@ -12,6 +12,11 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
+    @GetMapping("/subcategory-by-id")
+    SubcategoryWithMerchantsDto findSubcategoryWithMerchantsById(@RequestParam Long id) {
+        return categoryService.findSubcategoryWithMerchantsById(id);
+    }
+
     @GetMapping("/subcategories-no-merchants")
     List<SubcategoryDto> findAllSubcategoriesNoMerchants() {
         return categoryService.findAllSubcategoriesNoMerchants();
