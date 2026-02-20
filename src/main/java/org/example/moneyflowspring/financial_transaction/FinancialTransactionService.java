@@ -98,12 +98,11 @@ public class FinancialTransactionService {
         );
     }
 
-
+@Transactional
     public NewTransactionsFromIngFile retrieveNewTransactionsFormIngFiles() {
         List<FinancialTransactionFileRecord> financialTransactionFileRecords = ingFileReader.retrieveNewTransactionsFromFiles();
         List<FinancialTransactionEntity> savedTransactions = new ArrayList<>();
         List<FinancialTransactionEntity> duplicatedTransactions = new ArrayList<>();
-
 
         List<FinancialTransactionEntity> transactionsToSave = financialTransactionFileRecords
                 .stream()

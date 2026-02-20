@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class IngFileReader {
@@ -26,8 +29,8 @@ public class IngFileReader {
     private final String KREDYT = "Uruchomienie kre";
     private final static String INPUT_DIR = "C:\\Users\\piotr\\Desktop\\EXPENSE_TRACKER\\input";
     private final static String OUTPUT_DIR = "C:\\Users\\piotr\\Desktop\\EXPENSE_TRACKER\\output";
-    private final static String HEADINGS_LINE = "\"Data transakcji\";\"Data księgowania\"";
-
+    private final static List<String> HEADER_PHRASES = List.of("Data transakcji", "Dane kontrahenta");
+    private static String SEPARATOR = null;
 
     private static int INNER_TRANSACTIONS = 0;
 
@@ -81,7 +84,23 @@ public class IngFileReader {
             while (line != null) {
 
                 if (!headersFound) {
-                    headersFound = line.startsWith(HEADINGS_LINE);
+                    boolean headerFound = HEADER_PHRASES.stream()
+                            .allMatch(line::contains);
+                    if (headerFound) {
+                        headersFound = true;
+                        SEPARATOR = line.chars()
+                                .mapToObj(c -> (char) c)
+                                .filter(ch -> ch == ';' || ch == ',' || ch == '\t' || ch == '|')
+                                .collect(Collectors.groupingBy(
+                                        Function.identity(),
+                                        Collectors.counting()
+                                ))
+                                .entrySet()
+                                .stream()
+                                .max(Map.Entry.comparingByValue())
+                                .map(Map.Entry::getKey).orElseThrow(IllegalStateException::new).toString();
+                    }
+
                 } else {
                     String validRecordRegex = "^\\d{4}-\\d{2}-\\d{2}";
                     if (line.length() > 13 && line.substring(0, 10).matches(validRecordRegex)) {
@@ -103,7 +122,7 @@ public class IngFileReader {
     }
 
     FinancialTransactionFileRecord createNewRecordFromParserLine(String readLine) {
-        String[] line = readLine.split(";");
+        String[] line = readLine.split(SEPARATOR);
         final String transaction_date = line[0];
         final String vendor_data = line[2];
         final String title = line[3];
