@@ -37,6 +37,6 @@ public class FinancialTransactionEntity {
     @ManyToOne
     private KnownMerchantEntity knownMerchantEntity;
     private boolean knownMerchantUnsure;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     private SubcategoryEntity subcategoryEntity;
 }

@@ -98,7 +98,6 @@ public class FinancialTransactionService {
         );
     }
 
-@Transactional
     public NewTransactionsFromIngFile retrieveNewTransactionsFormIngFiles() {
         List<FinancialTransactionFileRecord> financialTransactionFileRecords = ingFileReader.retrieveNewTransactionsFromFiles();
         List<FinancialTransactionEntity> savedTransactions = new ArrayList<>();
