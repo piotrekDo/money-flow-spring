@@ -26,4 +26,27 @@ public class FinancialTransactionDto {
     private KnownMerchantDto knownMerchant;
     private boolean knownMerchantUnsure;
     private SubcategoryDto subcategoryDto;
+
+    public static FinancialTransactionDto fromEntity(FinancialTransactionEntity entity) {
+        if (entity == null) {
+            return null;
+        }
+        List<PossibleMerchantDto> possibleMerchants = entity.getPossibleMerchants().stream().map(PossibleMerchantDto::fromEntity).toList();
+        return new FinancialTransactionDto(
+                entity.getSystemId(),
+                entity.getTranType(),
+                entity.getTranDate(),
+                entity.getAmount(),
+                entity.getComment(),
+                entity.getBankTranNr(),
+                entity.getAccountNr(),
+                entity.getMerchantDataRaw(),
+                entity.getTitleRaw(),
+                entity.getNormalizedKeywords(),
+                possibleMerchants,
+                KnownMerchantDto.fromEntity(entity.getKnownMerchantEntity()),
+                entity.isKnownMerchantUnsure(),
+                SubcategoryDto.fromEntity(entity.getSubcategoryEntity())
+        );
+    }
 }

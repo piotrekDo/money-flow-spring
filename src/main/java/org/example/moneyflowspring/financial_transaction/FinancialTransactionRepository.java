@@ -16,6 +16,8 @@ public interface FinancialTransactionRepository extends JpaRepository<FinancialT
 
     List<FinancialTransactionEntity> findByTranDateBetweenOrderByTranDateAsc(LocalDate startDate, LocalDate endDate, Sort sort);
 
+    List<FinancialTransactionEntity> findAllByKnownMerchantEntity_MerchantIdAndTranDateBetweenOrderByTranDateAsc(Long merchantId, LocalDate startDate, LocalDate endDate);
+
     List<FinancialTransactionEntity> findByPossibleMerchantsIsEmpty();
 
     List<FinancialTransactionEntity> findByPossibleMerchantsIsNotEmpty();

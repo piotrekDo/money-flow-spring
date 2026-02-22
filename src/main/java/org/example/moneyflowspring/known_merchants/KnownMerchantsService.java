@@ -6,11 +6,12 @@ import lombok.AllArgsConstructor;
 import org.example.moneyflowspring.category.SubcategoryEntity;
 import org.example.moneyflowspring.category.SubcategoryRepository;
 import org.example.moneyflowspring.financial_transaction.FinancialTransactionEntity;
-import org.example.moneyflowspring.financial_transaction.FinancialTransactionMapper;
 import org.example.moneyflowspring.financial_transaction.FinancialTransactionRepository;
 import org.example.moneyflowspring.financial_transaction.KnownMerchantMatcher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -19,6 +20,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class KnownMerchantsService {
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private final SubcategoryRepository subcategoryRepository;
     private final KnownMerchantsRepository knownMerchantsRepository;
@@ -115,5 +117,16 @@ public class KnownMerchantsService {
                 .stream()
                 .map(knownMerchantMapper::merchantFromEntity)
                 .toList();
+    }
+
+    KnownMerchantsWithTransactionsDto findKnownMerchantByIdWitchTransactions(Long merchantId, String startDate, String endDate) {
+        KnownMerchantEntity merchantEntity = knownMerchantsRepository.findById(merchantId)
+                .orElseThrow(() -> new NoSuchElementException("Merchant with id: " + merchantId + " not found"));
+
+        LocalDate fromDate = LocalDate.parse(startDate, formatter);
+        LocalDate toDate = LocalDate.parse(endDate, formatter);
+        List<FinancialTransactionEntity> transactionsFound = financialTransactionRepository.findAllByKnownMerchantEntity_MerchantIdAndTranDateBetweenOrderByTranDateAsc(merchantId, fromDate, toDate);
+
+        return KnownMerchantsWithTransactionsDto.fromEntity(merchantEntity, transactionsFound);
     }
 }

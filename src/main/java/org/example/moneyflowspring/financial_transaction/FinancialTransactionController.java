@@ -15,7 +15,6 @@ public class FinancialTransactionController {
     FindFinancialTransactionsResponse findByTranDateBetweenOrderByTranDateAsc(
             @RequestParam String startDate,
             @RequestParam String endDate) {
-
         return service.findTransactionsWitchDateBetween(startDate, endDate);
     }
 
