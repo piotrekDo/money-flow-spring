@@ -25,6 +25,14 @@ public class FinancialTransactionService {
     private final KnownMerchantMatcher knownMerchantMatcher;
     private final SubcategoryRepository subcategoryRepository;
 
+    FinancialTransactionDto setComment(SetTransactionCommentDto dto) {
+        long tranSystemId = dto.getTranSystemId();
+        FinancialTransactionEntity transactionEntity = financialTransactionRepository.findById(tranSystemId).orElseThrow(() -> new NoSuchElementException("Transaction with id " + tranSystemId + " not found"));
+        transactionEntity.setComment(dto.getComment());
+        FinancialTransactionEntity transactionUpdated = financialTransactionRepository.save(transactionEntity);
+        return financialTransactionMapper.fromEntity(transactionUpdated);
+    }
+
     @Transactional
     FinancialTransactionDto setKnownMerchant(long tranSystemId, long merchantId) {
         FinancialTransactionEntity transactionEntity = financialTransactionRepository.findById(tranSystemId).orElseThrow(() -> new NoSuchElementException("Transaction with id " + tranSystemId + " not found"));

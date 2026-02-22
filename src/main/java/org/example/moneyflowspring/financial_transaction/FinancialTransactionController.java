@@ -36,4 +36,9 @@ public class FinancialTransactionController {
                                            @RequestParam Long subcategoryId) {
         return service.addSubcategoryToTransaction(tranSystemId, subcategoryId);
     }
+
+    @PostMapping("/set-comment")
+    FinancialTransactionDto setComment(@RequestBody SetTransactionCommentDto dto) {
+        return service.setComment(dto);
+    }
 }

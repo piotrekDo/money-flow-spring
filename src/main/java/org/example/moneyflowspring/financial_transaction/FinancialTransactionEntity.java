@@ -22,6 +22,7 @@ public class FinancialTransactionEntity {
     private TranType tranType;
     private LocalDate tranDate;
     private Double amount;
+    private String comment;
     @Column(unique = true)
     private String bankTranNr;
     private String accountNr;

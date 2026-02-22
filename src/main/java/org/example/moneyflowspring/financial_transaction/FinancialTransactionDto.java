@@ -16,6 +16,7 @@ public class FinancialTransactionDto {
     private TranType tranType;
     private LocalDate tranDate;
     private Double amount;
+    private String comment;
     private String bankTranNr;
     private String accountNr;
     private String merchantDataRaw;
