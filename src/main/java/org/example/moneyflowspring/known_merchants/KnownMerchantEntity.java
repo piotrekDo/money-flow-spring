@@ -40,6 +40,14 @@ public class KnownMerchantEntity {
         keyword.setMerchant(this);
     }
 
+    void addSubcategory(SubcategoryEntity subcategory) {
+        if (this.subcategories.contains(subcategory)) {
+            throw new IllegalStateException("Subcategory with id: " + subcategory.getId() + " " + subcategory.getName() + " already exists at merchant with id: " + merchantId + " " + merchantCode);
+        }
+        this.subcategories.add(subcategory);
+        subcategory.getMerchants().add(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -61,13 +69,5 @@ public class KnownMerchantEntity {
                 ", imageUrl='" + imageUrl + '\'' +
                 ", keywords=" + keywords +
                 '}';
-    }
-
-    void addSubcategory(SubcategoryEntity subcategory) {
-        if (this.subcategories.contains(subcategory)) {
-            throw new IllegalStateException("Subcategory with id: " + subcategory.getId() + " " + subcategory.getName() + " already exists at merchant with id: " + merchantId + " " +  merchantCode);
-        }
-        this.subcategories.add(subcategory);
-        subcategory.getMerchants().add(this);
     }
 }

@@ -9,7 +9,9 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 @Service
 public class FinancialTransactionMapper {
@@ -19,6 +21,9 @@ public class FinancialTransactionMapper {
         String merchantDataClean = fileRecord.getMerchantData().replaceAll("['\"]+", "");
         String titleClean = fileRecord.getTitle().replaceAll("['\"]+", "");
         String normalizedKeywords = normalize(merchantDataClean + " " + titleClean);
+        String dedupedKeywords = Arrays.stream(normalizedKeywords.split("\\s+"))
+                .distinct()
+                .collect(Collectors.joining(" "));
         LocalDate tranDate = LocalDate.parse(fileRecord.getTranDate(), formatter);
         String bankTranNumberClean = fileRecord.getTranNr().replace("'", "").replaceAll("\\s+", "");
         String accountNrClean = fileRecord.getAccountNr().replace("'", "").replaceAll("\\s+", "");
@@ -32,7 +37,7 @@ public class FinancialTransactionMapper {
                 accountNrClean,
                 merchantDataClean,
                 titleClean,
-                normalizedKeywords,
+                dedupedKeywords,
                 new ArrayList<>(),
                 null,
                 true,

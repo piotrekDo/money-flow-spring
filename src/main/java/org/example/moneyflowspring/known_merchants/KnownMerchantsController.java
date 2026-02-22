@@ -12,6 +12,11 @@ public class KnownMerchantsController {
 
     private final KnownMerchantsService knownMerchantsService;
 
+    @PostMapping("/add-new")
+    KnownMerchantDto addNewKnownMerchant(@RequestBody AddNewKnownMerchantDto dto) {
+        return knownMerchantsService.createNewKnownMerchant(dto);
+    }
+
     @GetMapping("/all")
     List<KnownMerchantDto> findAllKnownMerchants() {
         return knownMerchantsService.findAllKnownMerchants();

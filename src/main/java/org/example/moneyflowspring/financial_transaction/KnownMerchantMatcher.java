@@ -49,7 +49,7 @@ public class KnownMerchantMatcher {
 
     }
 
-    FinancialTransactionEntity matchMerchantForTransaction(FinancialTransactionEntity transaction) {
+    public FinancialTransactionEntity matchMerchantForTransaction(FinancialTransactionEntity transaction) {
         TranType tranType = transaction.getTranType();
         if (tranType == TranType.CASH_IN || tranType == TranType.CASH_OUT) {
             matchAtmMerchant(transaction);
