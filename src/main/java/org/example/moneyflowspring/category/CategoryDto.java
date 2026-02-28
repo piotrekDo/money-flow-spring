@@ -13,5 +13,6 @@ public class CategoryDto {
     private String imageUrl;
     private String icon;
     private String color;
+    private boolean isPositive;
     private List<SubcategoryDto> subcategories;
 }

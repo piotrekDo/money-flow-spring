@@ -19,6 +19,8 @@ public class CategoryEntity {
     private String imageUrl;
     private String icon;
     private String color;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isPositive;
     @OneToMany(mappedBy = "category" , cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SubcategoryEntity> categoryEntities;
 }

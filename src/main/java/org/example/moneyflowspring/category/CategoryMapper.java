@@ -17,6 +17,7 @@ public class CategoryMapper {
                 dto.getImageUrl(),
                 dto.getIcon(),
                 dto.getColor(),
+                dto.isPositive(),
                 new ArrayList<>()
         );
     }
@@ -29,6 +30,7 @@ public class CategoryMapper {
                 entity.getImageUrl(),
                 entity.getIcon(),
                 entity.getColor(),
+                entity.isPositive(),
                 subcategories
         );
     }
