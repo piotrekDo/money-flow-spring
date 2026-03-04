@@ -15,6 +15,14 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(
+        name = "financial_transaction_entity",
+        indexes = {
+                @Index(name = "idx_tran_date", columnList = "tranDate"),
+                @Index(name = "idx_tran_subcategory", columnList = "subcategory_entity_id"),
+                @Index(name = "idx_tran_date_subcat", columnList = "tranDate, subcategory_entity_id")
+        }
+)
 public class FinancialTransactionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
