@@ -15,6 +15,11 @@ public class DashboardController {
 
     private final DashboardService dashboardService;
 
+    @GetMapping("/transactions-month")
+    List<DashboardTransactions> getTransactionsByMonth(@RequestParam String date) {
+        return dashboardService.getDashboardTransactionsForMonth(date);
+    }
+
     @GetMapping("/category-month")
     List<CategorySpendingDto> getCategorySpendingForMonth(@RequestParam String date) {
         return dashboardService.getCategorySpendingForMonth(date);

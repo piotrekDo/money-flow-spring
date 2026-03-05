@@ -1,6 +1,7 @@
 package org.example.moneyflowspring.financial_transaction;
 
 import org.example.moneyflowspring.dashboard.CategorySpendingDto;
+import org.example.moneyflowspring.dashboard.TransactionWithCategory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +13,47 @@ import java.util.List;
 
 @Repository
 public interface FinancialTransactionRepository extends JpaRepository<FinancialTransactionEntity, Long> {
+
+    @Query(value = """
+            SELECT
+                t.system_id                AS systemId,
+                t.tran_type                AS tranType,
+                t.tran_date                AS tranDate,
+                t.amount                   AS amount,
+                t.comment                  AS comment,
+                t.merchant_data_raw        AS merchantDataRaw,
+                t.title_raw                AS titleRaw,
+                c.id                       AS categoryId,
+                c.name                     AS categoryName,
+                c.icon                     AS categoryIcon,
+                c.color                    AS categoryColor,
+                COALESCE(c.is_positive, false) AS categoryIsPositive,
+                s.id                       AS subcategoryId,
+                s.name                     AS subcategoryName,
+                s.icon                     AS subcategoryIcon,
+                s.color                    AS subcategoryColor,
+                m.merchant_id              AS merchantId,
+                m.image_url                AS imageUrl,
+                m.merchant_code            AS merchantCode,
+                m.merchant_name            AS merchantName
+            FROM financial_transaction_entity t
+            LEFT JOIN known_merchants m
+                   ON t.known_merchant_entity_merchant_id = m.merchant_id
+            LEFT JOIN subcategory_entity s
+                   ON t.subcategory_entity_id = s.id
+            LEFT JOIN category_entity c
+                   ON s.category_id = c.id
+            WHERE t.tran_date >= :afterEquals
+              AND t.tran_date <  :before
+            ORDER BY
+                c.is_positive DESC NULLS LAST,
+                c.id ASC NULLS LAST,
+                t.tran_date DESC
+            """, nativeQuery = true)
+    List<TransactionWithCategory> findTransactionsWithCategroiesByDate(
+            @Param("afterEquals") LocalDate afterEquals,
+            @Param("before") LocalDate before
+    );
 
     @Query(value = """
             WITH last_three_months AS (
